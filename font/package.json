@@ -10,6 +10,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "github-markdown-css": "^2.10.0",
     "vue": "^2.5.2",
     "vue-particles": "^1.0.9",
     "vue-router": "^3.0.1"
