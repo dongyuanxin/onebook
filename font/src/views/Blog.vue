@@ -1,29 +1,30 @@
 <template>
     <div class="blog special-scrollbar">
-        <side class="left-side" :style="{'margin-left':sideOffset}"></side>
-        <book-header @toggleside="showSide = !showSide"></book-header>
-        <div class="markdown-body">
-            <h1>Unicorns</h1>
-            <p>All the things</p>
-            <pre>import Hello from test</pre>
-            <br/><br/><br/><br/><br/><br/><br/><br/>
-            <p>首先声明，<br/>我和张晓翀都不是算法牛人，确切的说应该是算法的门外汉，小白一个。所以我们为了撬开算法的大门，各自刷完了一遍LeetCode的题目，这其中碰到了很多困难，当然也少不了用了Google以及参考了别人的代码。</p>
-            <p>首先声明，我和张晓翀都不是算法牛人，确切的说应该是算法的门外汉，小白一个。所以我们为了撬开算法的大门，各自刷完了一遍LeetCode的题目，这其中碰到了很多困难，当然也少不了用了Google以及参考了别人的代码。</p>
-            <br/><br/><br/><br/><br/><br/><br/><br/><br/>
-            <p>首先声明，我和张晓翀都不是算法牛人，确切的说应该是算法的门外汉，小白一个。所以我们为了撬开算法的大门，各自刷完了一遍LeetCode的题目，这其中碰到了很多困难，当然也少不了用了Google以及参考了别人的代码。</p>
-            <p>首先声明，我和张晓翀都不是算法牛人，确切的说应该是算法的门外汉，小白一个。所以我们为了撬开算法的大门，各自刷完了一遍LeetCode的题目，这其中碰到了很多困难，当然也少不了用了Google以及参考了别人的代码。</p>
+        <div class="left-side" :style="{'margin-left':sideOffset}" @click="showSide = false">
+            <side  @flushcontent="flushContent"></side>
         </div>
-
+        <book-header @toggleside="showSide = !showSide"></book-header>
+        <div class="markdown-body" @click="showSide = false">
+            <vue-markdown :source="content"></vue-markdown>
+        </div>
+        <div class="blog-cover" v-show="showSide === true" @click="showSide=false">
+            <cover-layer></cover-layer>
+            <!-- 不能写成 <cover-layer @click="..."></cover-layer>
+            也不能在@click里面调用 不在this对象中的函数，例如 console... -->
+        </div>
     </div>
 </template>
 <script>
 import GithubMdCss from 'github-markdown-css'
+import VueMarkdown from 'vue-markdown'
 import Side from '@/components/Side'
 import BookHeader from '@/components/header/BookHeader'
+import CoverLayer from '@/components/CoverLayer'
 export default {
     data(){
         return{
-            showSide:false
+            showSide:false,
+            content:""
         }
     },
     computed:{
@@ -31,9 +32,19 @@ export default {
             return this.showSide ? "0px":"-320px" 
         }
     },
+    methods:{
+        flushContent(content) {
+            this.content = content
+        },
+        test(){
+            alert('123')
+        }
+    },
     components:{
         Side,
-        BookHeader
+        BookHeader,
+        VueMarkdown,
+        CoverLayer
     }
 }
 </script>
@@ -42,8 +53,18 @@ export default {
         left:0;
         top: 0;
         position: fixed;
+        z-index: 300;
+        transition: all .3s linear;
     }
-    /***/
+    .blog-cover {
+        left:0;
+        top:0;
+        position: fixed;
+        z-index: 200;
+        width: 100%;
+        height: 100%;
+    }
+    /** github-markdown样式 */
     .markdown-body {
         box-sizing: border-box;
         min-width: 200px;
