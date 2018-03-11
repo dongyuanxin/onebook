@@ -8,24 +8,59 @@ import {json2html} from "@/utils/json2html.js"
 export default {
     data(){
         return {
-            summary:"",
-            hrefs:""
+            summary:"", // 目录的string格式
+            hrefs:"",
+            api:'https://raw.githubusercontent.com/godbmw/passages/master/',
+            content:""
         }
     },
     methods:{
+        // 为每个<a>标签绑定事件
         handleClickOnHref(){
-            this.hrefs = this.$refs.side.getElementsByTagName("a")
-            console.log(this.hrefs)
+            let that = this
+            let helper = function(url){
+                return function(e) {
+                    that.readMdFromGithub(url)
+                }
+            }
+            let uri = ''
+            for (let href of this.hrefs) {
+                uri = this.getMdUri(href)
+                href.addEventListener('click',helper(uri)) // 请查看 《JavaScript使用精粹》 P39 闭包高级应用
+            }
+        },
+        // 异步请求github上的仓库文章
+        readMdFromGithub(uri){
+            axios.get(uri)
+            .then(res=> {
+                this.$emit("flushcontent",res.data)
+                this.conetnt = res.data
+            })
+            .catch(err=> console.log(err.message))
+        },
+        // 将<a>标签的data属性处理成github的超链接样式
+        getMdUri(dom){
+            let data = ''
+            data = dom.getAttribute('data')
+            return (this.api + data.trim().split(' ').join('/'))
         }
     },
     mounted:function(){
-        if(this.summary === "") {
+        // 获取 后台的文章目录
+        if(this.summary === "") { // 只一次加载
             axios.get("/api/summary")
             .then(res=>{
                 this.summary = json2html(res.data)
-                this.handleClickOnHref()
             })
         }
+    },
+    updated(){
+        /** 默认拉取第一个<a>标签的文章内容 */
+        this.hrefs = this.$refs.side.getElementsByTagName("a")
+        let defaultUri = this.getMdUri(this.hrefs[0])
+        this.readMdFromGithub(defaultUri)
+        /** */
+        this.handleClickOnHref()
     }
 }
 </script>
@@ -37,7 +72,7 @@ export default {
     height: 100vh;
     overflow-x: hidden;
     overflow-y: scroll;
-    transition: all .3s linear;
+    text-overflow:ellipsis; /* 超出部分省略号显示 */
     font-size:15px;
 }
 .side p{
