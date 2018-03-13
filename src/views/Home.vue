@@ -1,36 +1,41 @@
 <template>
   <div class="home" ref="home">
     <navigation :style="{opacity:navOpacity}"></navigation>
-    <vue-particles
-      :style="{opacity:particleOpacity}"
-      color="#cccccc" 
-      class='particles'
-      :clickEffect="true"
-      shapeType = "polygon"
-      :particlesNumber = "100"
-      :linesDistance = "130"
-    ></vue-particles>
-    <div class="hero" v-for="(item,index) in msg"  :class="getHeroClass(index)" >
-      <span @mouseenter="particleOpacity=0" @mouseleave="particleOpacity = 1" @mousedown="particleOpacity=0"> {{ item.info }} </span>
+      <vue-particles
+        class='particles'
+        :style="{opacity:particleOpacity}"
+        color="#cccccc" 
+        :clickEffect="true"
+        shapeType = "polygon"
+        :particlesNumber = "100"
+        :linesDistance = "130"
+      ></vue-particles>
+    <div class="hero" v-for="(item,index) in msg"  :class="getHeroClass(index)">
+      <span @mouseenter="particleOpacity=0" @mouseleave="particleOpacity = 1" @click="jumpTo(item.href)"> {{ item.info }} </span>
     </div>
+    <my-footer></my-footer>
   </div>
 </template>
 
 <script>
 import Navigation from '@/components/Navigation.vue'
+import MyFooter from '@/views/Footer'
 export default {
   name: 'Home',
   data () {
     return {
       msg: [
         {
-          info:'I\'m GODBMW'
+          info:'I\'m GODBMW',
+          href:'/blog'
         },
         {
-          info:'Read BLOG'
+          info:'Read BLOG',
+          href:'/blog'
         },
         {
-          info:'See WORK'
+          info:'See WORK',
+          href:'/blog'
         }
       ],
       index:0,
@@ -45,7 +50,8 @@ export default {
     }
   },
   components:{
-    Navigation
+    Navigation,
+    MyFooter
   },
   methods:{
     getHeroClass(index){
@@ -77,6 +83,9 @@ export default {
       if(direction==='down') {
         document.documentElement.scrollTop = 1234
       }
+    },
+    jumpTo(href){
+      this.$router.push(href)
     }
   },
   mounted(){

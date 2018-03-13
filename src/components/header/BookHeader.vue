@@ -6,9 +6,9 @@
         @click="moveSide()"
         ></span>
         <span class="iconfont icon-fenlei left-icon"  @mouseenter="iconName='分类'" @mouseleave="iconName=''"></span>
-        <span class="iconfont icon-zhihu right-icon"  @mouseenter="iconName='知乎'" @mouseleave="iconName=''" ></span>
-        <span class="iconfont icon-weibo right-icon"  @mouseenter="iconName='微博'" @mouseleave="iconName=''"></span>
-        <span class="icon-name"  :style="{opacity:iconNameOpacity}">{{iconName}}</span>
+        <span class="iconfont icon-weibiaoti1 right-icon"  @mouseenter="iconName='首页'" @mouseleave="iconName=''" @click="dumpTo('/')"></span>
+        <span class="iconfont icon-github right-icon"  @mouseenter="iconName='github'" @mouseleave="iconName=''" @click="dumpTo('https://github.com/godbmw/')"></span>
+        <span class="icon-name" :style="{opacity:iconNameOpacity}">{{iconName}}</span>
     </div>
 </template>
 <script>
@@ -26,6 +26,13 @@ export default {
     methods:{
         moveSide(){
             this.$emit("toggleside") // 关闭父组件的目录导航栏
+        },
+        dumpTo(href){
+            if(href.indexOf('http')>-1) { // 外网链接
+                window.location.href = href
+            } else {
+                this.$router.push(href) // 内网连接
+            }
         }
     }
 }
@@ -52,6 +59,7 @@ export default {
         transition: all .3s linear;
     }
     .book-header .iconfont:hover{
+        cursor: pointer;
         opacity: 1.0;
     }
     /***/
