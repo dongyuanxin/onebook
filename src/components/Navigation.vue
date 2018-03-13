@@ -16,10 +16,6 @@ export default {
         return {
             options:[
                 {
-                    name:'Home',
-                    href:'/home'
-                },
-                {
                     name:'Blog',
                     href:'/blog'
                 },
@@ -48,14 +44,13 @@ export default {
 </script>
 <style>
     .nav-outer{
-        transition: all .5s linear;
+        transition: all .3s linear;
         height: 10vh;
         width:100%;
         position: fixed;
         left:0;
         top:0;
         z-index:900;
-        background-color: red;
     }
     .nav-container::after,.nav-outer::after{
         clear: both;
@@ -68,7 +63,6 @@ export default {
         font-size:15px;
         font-weight: 900;
         color:white;
-        background-color: white;
         width:60%;
         float: right;
         height: 100%;
@@ -82,7 +76,6 @@ export default {
         align-items: center;
         /***/
         cursor: pointer;
-        background-color: blue;
         height: 100%;
         vertical-align: center;
         float: right;
