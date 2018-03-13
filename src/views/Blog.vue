@@ -4,47 +4,54 @@
             <side  @flushcontent="flushContent"></side>
         </div>
         <book-header @toggleside="showSide = !showSide"></book-header>
-        <div class="markdown-body" @click="showSide = false">
-            <vue-markdown :source="content"></vue-markdown>
-        </div>
+        <div class="markdown-body" @click="showSide = false" v-html="htmlContent"></div>
         <div class="blog-cover" v-show="showSide === true" @click="showSide=false">
             <cover-layer></cover-layer>
             <!-- 不能写成 <cover-layer @click="..."></cover-layer>
             也不能在@click里面调用 不在this对象中的函数，例如 console... -->
         </div>
+        <my-footer></my-footer>
     </div>
 </template>
 <script>
-import GithubMdCss from 'github-markdown-css'
-import VueMarkdown from 'vue-markdown'
 import Side from '@/components/Side'
 import BookHeader from '@/components/header/BookHeader'
 import CoverLayer from '@/components/CoverLayer'
+import MyFooter from '@/views/Footer'
+
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github.css'
+import Marked from 'marked'
+Marked.setOptions({
+    highlight: (code) => hljs.highlightAuto(code).value
+})
+
 export default {
     data(){
         return{
             showSide:false,
-            content:""
+            content:"",
+            loaded:false
         }
     },
     computed:{
         sideOffset(){
             return this.showSide ? "0px":"-320px" 
+        },
+        htmlContent(){
+            return Marked(this.content)
         }
     },
     methods:{
-        flushContent(content) {
+        flushContent(content) { // 子组件触发事件
             this.content = content
-        },
-        test(){
-            alert('123')
         }
     },
     components:{
         Side,
         BookHeader,
-        VueMarkdown,
-        CoverLayer
+        CoverLayer,
+        MyFooter
     }
 }
 </script>
@@ -65,17 +72,7 @@ export default {
         height: 100%;
     }
     /** github-markdown样式 */
-    .markdown-body {
-        box-sizing: border-box;
-        min-width: 200px;
-        max-width: 980px;
-        margin: 0 auto;
-        padding: 45px;
-    }
     @media (max-width: 767px) {
-        .markdown-body {
-            padding: 15px;
-        }
         .book-header {
             padding:15px 20px !important;
         }
