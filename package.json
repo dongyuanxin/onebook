@@ -12,10 +12,14 @@
   "dependencies": {
     "axios": "^0.18.0",
     "github-markdown-css": "^2.10.0",
+    "highlight.js": "^9.12.0",
+    "marked": "^0.3.17",
     "vue": "^2.5.2",
+    "vue-highlight.js": "^2.2.0",
     "vue-markdown": "^2.2.4",
     "vue-particles": "^1.0.9",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
