@@ -7,16 +7,18 @@ import axios from "axios"
 import {json2html} from "@/utils/json2html.js"
 export default {
     data(){
+        let user = this.$route.params.user , name = this.$route.params.name // github名字和仓库名
+        let api = 'https://raw.githubusercontent.com/' + ((user)?(user+'/'):'godbmw/') + ((name)?(name+'/'):'book/') + 'master/'
+        console.log("Your github raw api is : " + api)
         return {
             summary:"", // 目录的string格式
             hrefs:"",
-            api:'https://raw.githubusercontent.com/godbmw/passages/master/',
+            api,
             content:""
         }
     },
     methods:{
-        // 为每个<a>标签绑定事件
-        handleClickOnHref(){
+        handleClickOnHref(){ // 为每个<a>标签绑定事件
             let that = this
             let helper = function(url){
                 return function(e) {
@@ -29,17 +31,19 @@ export default {
                 href.addEventListener('click',helper(uri)) // 请查看 《JavaScript使用精粹》 P39 闭包高级应用
             }
         },
-        // 异步请求github上的仓库文章
-        readMdFromGithub(uri){
-            axios.get(uri)
-            .then(res=> {
-                this.$emit("flushcontent",res.data)
-                this.conetnt = res.data
+        readMdFromGithub(uri){ // 异步请求github上的仓库文章
+            let that = this
+            return new Promise(function(resolve,reject){
+                axios.get(uri)
+                .then(res=> {
+                    that.$emit("flushcontent",res.data)
+                    that.conetnt = res.data
+                    resolve('ok')
+                })
+                .catch(err=> reject(err))
             })
-            .catch(err=> console.log(err.message))
         },
-        // 将<a>标签的data属性处理成github的超链接样式
-        getMdUri(dom){
+        getMdUri(dom){ // 将<a>标签的data属性处理成github的超链接样式
             let data = ''
             data = dom.getAttribute('data')
             return (this.api + data.trim().split(' ').join('/'))
@@ -54,11 +58,18 @@ export default {
             })
         }
     },
-    updated(){
+    async updated(){
         /** 默认拉取第一个<a>标签的文章内容 */
         this.hrefs = this.$refs.side.getElementsByTagName("a")
         let defaultUri = this.getMdUri(this.hrefs[0])
-        this.readMdFromGithub(defaultUri)
+        try{
+            await this.readMdFromGithub(defaultUri)
+        } catch(error) { // 如果github用户名和仓库名错误，那么重新拉取 我本人 的 book
+            this.api = 'https://raw.githubusercontent.com/godbmw/passages/master/'
+            defaultUri = this.getMdUri(this.hrefs[0])
+            await this.readMdFromGithub(defaultUri)
+        }
+        // console.log(this.$route.query)
         /** */
         this.handleClickOnHref()
     }
@@ -66,44 +77,47 @@ export default {
 </script>
 <style>
 .side{
-    margin-right: 20px;
+    margin-right: 20px; /* 主要是防止滚动条样式 */
     width: 300px;
     background: #f6f8fa;
     height: 100vh;
     overflow-x: hidden;
     overflow-y: scroll;
-    text-overflow:ellipsis; /* 超出部分省略号显示 */
+    text-overflow: ellipsis !important; /*超出部分省略号显示 */
     font-size:15px;
+    vertical-align: center;
+    cursor:not-allowed;
 }
-.side p{
-    height: 30px;
-    line-height: 30px;
-}
+
 .side a{
-    height: 20px;
-    line-height: 2em;
+    font-size: 0.9em;
 }
-.side .level-1 {  
+.side .level-1 , .side .level-2 {
+    margin:8px 0;
+}
+.side .level-1 {
     padding-left:10px;
-    opacity: 0.7;
+    opacity: 0.9;
+    text-shadow: 1px 1px 1px #111111;
 }
 
 .side .level-2{
-    padding-left:30px;
+    padding-left:20px;
     opacity: 0.7;
-}
-
-.side a{
-    margin-left:50px;
+    text-shadow: 1px 1px 1px #111111;
 }
 
 /**移入特效*/
 .side a{
     font-family: "微软雅黑","Open Sans","Helvetica Neue",Arial,sans-serif;
     position: relative;
-    line-height: 36px;
     text-decoration: none;
     cursor: pointer;
+    margin-left:30px;
+    margin-top:5px !important;
+    margin-bottom:5px !important;
+    opacity: 0.9;
+    color: #666600;
 }
 .side a:hover {
     color: #22a7f0;
@@ -114,7 +128,7 @@ export default {
     position: absolute;
     width: 100%;
     height: 2px;
-    bottom:-5px;
+    bottom:-2px;
     left: 0;
     background-color: #019875;
     visibility: hidden;

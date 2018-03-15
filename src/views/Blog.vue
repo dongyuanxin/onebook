@@ -3,7 +3,9 @@
         <div class="left-side" :style="{'margin-left':sideOffset}" @click="showSide = false">
             <side  @flushcontent="flushContent"></side>
         </div>
-        <book-header @toggleside="showSide = !showSide"></book-header>
+        <div class="-book-header">
+            <book-header @toggleside="showSide = !showSide"></book-header>
+        </div>
         <div class="markdown-body" @click="showSide = false" v-html="htmlContent"></div>
         <div class="blog-cover" v-show="showSide === true" @click="showSide=false">
             <cover-layer></cover-layer>
@@ -70,6 +72,12 @@ export default {
         z-index: 200;
         width: 100%;
         height: 100%;
+    }
+    .-book-header {
+        width: 100%;
+        position: fixed;
+        top:0;
+        left: 0;
     }
     /** github-markdown样式 */
     @media (max-width: 767px) {
