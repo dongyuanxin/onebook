@@ -9,15 +9,15 @@ export function json2html(json){
             let item = json[key]
             if(typeof item === 'object'){
                 html += `<p class="level-${level}">${key}</p>\n`
-                _json2html(item,keyArr + " " + key)
+                _json2html(item,keyArr===undefined ? key : `${keyArr}*${key}`) // 以*为分隔符,因为文件路径不能有*
             }
             else {
                 // data中保存 文章的分类信息
-                html += `<a data="${keyArr} ${item}">` + item + '</a><br/>\n' 
+                html += `<a data="${keyArr}*${item}">` + item + '</a><br/>\n' 
             }
         }
         level-=1
     }
-    _json2html(json,"")
+    _json2html(json)
     return html
 }

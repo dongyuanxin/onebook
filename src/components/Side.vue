@@ -14,7 +14,8 @@ export default {
             summary:"", // 目录的string格式
             hrefs:"",
             api,
-            content:""
+            content:"",
+            key:"" // 文章关键词
         }
     },
     methods:{
@@ -44,9 +45,9 @@ export default {
             })
         },
         getMdUri(dom){ // 将<a>标签的data属性处理成github的超链接样式
-            let data = ''
-            data = dom.getAttribute('data')
-            return (this.api + data.trim().split(' ').join('/'))
+            let data = dom.getAttribute('data')
+            this.key = data
+            return (this.api + data.split('*').join('/'))
         }
     },
     mounted:function(){
@@ -61,15 +62,19 @@ export default {
     async updated(){
         /** 默认拉取第一个<a>标签的文章内容 */
         this.hrefs = this.$refs.side.getElementsByTagName("a")
-        let defaultUri = this.getMdUri(this.hrefs[0])
+        let defaultUri = ''
+        if( this.$route.query.hasOwnProperty('key')) {
+            defaultUri = this.api + this.$route.query.key.split('*').join('/')
+        } else {
+            defaultUri = this.getMdUri(this.hrefs[0])
+        }
         try{
             await this.readMdFromGithub(defaultUri)
-        } catch(error) { // 如果github用户名和仓库名错误，那么重新拉取 我本人 的 book
+        } catch(error) { // 如果github用户名和仓库名错误，那么重新拉取 博客作者 的 book
             this.api = 'https://raw.githubusercontent.com/godbmw/passages/master/'
             defaultUri = this.getMdUri(this.hrefs[0])
             await this.readMdFromGithub(defaultUri)
         }
-        // console.log(this.$route.query)
         /** */
         this.handleClickOnHref()
     }
