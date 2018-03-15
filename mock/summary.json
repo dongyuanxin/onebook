@@ -1,15 +1,13 @@
 {
-    " ":{
-        "Hadoop和Spark":[
-            "[译]Spark编程指南(Python版).md"
-        ],
-        "font学习":[
-            "test.md"
-        ],
-        "机器学习":[
-            "机器学习：利用NLTK进行简单文本分析.md"
-        ]
-    },
+    "Hadoop和Spark":[
+        "[译]Spark编程指南(Python版).md"
+    ],
+    "font学习":[
+        "test.md"
+    ],
+    "机器学习":[
+        "机器学习：利用NLTK进行简单文本分析.md"
+    ],
     "Python":{
         "爬虫分析":[
             "url.md"
