@@ -22,9 +22,15 @@ export default {
         handleClickOnHref(){ // 为每个<a>标签绑定事件
             let that = this
             let helper = function(url,href){
-                return function(e) {
+                return async function(e) {
+                    let originalKey = localStorage.getItem('content-key')
                     localStorage.setItem('content-key',href.getAttribute('data'))
-                    that.readMdFromGithub(url)
+                    try{
+                        await that.readMdFromGithub(url)
+                    } catch( err ) { // 404Error,重新设置缓存
+                        console.log(`Can't find url`)
+                        localStorage.setItem('content-key',originalKey)
+                    }
                 }
             }
             let uri = ''
