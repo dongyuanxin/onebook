@@ -14,22 +14,22 @@ export default {
             summary:"", // 目录的string格式
             hrefs:"",
             api,
-            content:"",
-            key:"" // 文章关键词
+            content:""
         }
     },
     methods:{
         handleClickOnHref(){ // 为每个<a>标签绑定事件
             let that = this
-            let helper = function(url){
+            let helper = function(url,href){
                 return function(e) {
                     that.readMdFromGithub(url)
+                    localStorage.setItem('content-key',href.getAttribute('data'))
                 }
             }
             let uri = ''
             for (let href of this.hrefs) {
-                uri = this.getMdUri(href)
-                href.addEventListener('click',helper(uri)) // 请查看 《JavaScript使用精粹》 P39 闭包高级应用
+                uri = this.getMdUri(href,false)
+                href.addEventListener('click',helper(uri,href)) // 请查看 《JavaScript使用精粹》 P39 闭包高级应用
             }
         },
         readMdFromGithub(uri){ // 异步请求github上的仓库文章
@@ -44,9 +44,11 @@ export default {
                 .catch(err=> reject(err))
             })
         },
-        getMdUri(dom){ // 将<a>标签的data属性处理成github的超链接样式
+        getMdUri(dom,save){ // 将<a>标签的data属性处理成github的超链接样式
             let data = dom.getAttribute('data')
-            this.key = data
+            if(save === true) { // 如果保存当前的data为contentKey的话
+                localStorage.setItem('content-key',data) // 更新contentKey,用于 原页面 刷新的验证
+            }
             return (this.api + data.split('*').join('/'))
         }
     },
@@ -60,22 +62,23 @@ export default {
         }
     },
     async updated(){
-        /** 默认拉取第一个<a>标签的文章内容 */
         this.hrefs = this.$refs.side.getElementsByTagName("a")
         let defaultUri = ''
-        if( this.$route.query.hasOwnProperty('key')) {
+        if( this.$route.query.hasOwnProperty('key')) { // 如果url中给出了文章key,那么拉取对应文章,并且覆盖之前的 content-key
             defaultUri = this.api + this.$route.query.key.split('*').join('/')
-        } else {
-            defaultUri = this.getMdUri(this.hrefs[0])
+            localStorage.setItem('content-key',this.$route.query.key)
+        } else if( localStorage.getItem('content-key') !==null  ){ // 然后,读取缓存中的contentKey属性判断是否是"原页面刷新"
+            defaultUri = this.api + localStorage.getItem('content-key').split('*').join('/')
+        } else { // 在不显示给出uri与本地没有缓存的情况下 : 默认拉取第一个<a>标签的文章内容,并且给 content-key 赋值
+            defaultUri = this.getMdUri(this.hrefs[0],true)
         }
         try{
             await this.readMdFromGithub(defaultUri)
         } catch(error) { // 如果github用户名和仓库名错误，那么重新拉取 博客作者 的 book
             this.api = 'https://raw.githubusercontent.com/godbmw/passages/master/'
-            defaultUri = this.getMdUri(this.hrefs[0])
+            defaultUri = this.getMdUri(this.hrefs[0],true)
             await this.readMdFromGithub(defaultUri)
         }
-        /** */
         this.handleClickOnHref()
     }
 }
