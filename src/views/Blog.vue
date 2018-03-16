@@ -22,7 +22,7 @@ import CoverLayer from '@/components/CoverLayer'
 import MyFooter from '@/views/Footer'
 
 import hljs from 'highlight.js'
-import 'highlight.js/styles/github.css'
+import 'highlight.js/styles/atom-one-light.css'
 import Marked from 'marked'
 Marked.setOptions({
     highlight: (code) => hljs.highlightAuto(code).value
