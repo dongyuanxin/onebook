@@ -27,15 +27,15 @@ export default {
       msg: [
         {
           info:'I\'m GODBMW',
-          href:'/blog'
+          href:'/book'
         },
         {
-          info:'Read BLOG',
-          href:'/blog'
+          info:'Read Book',
+          href:'/book'
         },
         {
           info:'See WORK',
-          href:'/blog'
+          href:'/book'
         }
       ],
       index:0,
