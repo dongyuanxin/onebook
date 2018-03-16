@@ -9,8 +9,6 @@
         <div class="markdown-body" @click="showSide = false" v-html="htmlContent"></div>
         <div class="blog-cover" v-show="showSide === true" @click="showSide=false">
             <cover-layer></cover-layer>
-            <!-- 不能写成 <cover-layer @click="..."></cover-layer>
-            也不能在@click里面调用 不在this对象中的函数，例如 console... -->
         </div>
         <my-footer></my-footer>
     </div>

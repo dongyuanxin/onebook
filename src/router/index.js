@@ -19,17 +19,17 @@ export default new Router({
       component: Home
     },
     {
-      path:'/blog',
+      path:'/book',
       name:"Blog",
       component:Blog
     },
     {
-      path:'/blog/:user/:name', // user : githubID ; name: 仓库名字
+      path:'/book/:user/:name', // user : githubID ; name: 仓库名字
       name:"BlogWithUserName",
       component:Blog
     },
     {
-      path:'/blog/:user', // user : githubID ; 仓库名字默认是 : book
+      path:'/book/:user', // user : githubID ; 仓库名字默认是 : book
       name:"BlogWithUser",
       component:Blog
     },

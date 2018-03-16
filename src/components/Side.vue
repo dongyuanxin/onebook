@@ -49,7 +49,6 @@ export default {
                 axios.get(uri)
                 .then(res=> {
                     that.content = replaceImgPath(base,res.data) // 图片路径换为绝对路径
-                    console.log(that.content)
                     that.$emit("flushcontent",that.content)
                     resolve('ok')
                 })
