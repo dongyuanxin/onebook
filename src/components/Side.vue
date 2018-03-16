@@ -5,6 +5,7 @@
 <script>
 import axios from "axios"
 import {json2html} from "@/utils/json2html.js"
+import {replaceImgPath} from "@/utils/replaceImgPath.js"
 export default {
     data(){
         let user = this.$route.params.user , name = this.$route.params.name // github名字和仓库名
@@ -22,8 +23,8 @@ export default {
             let that = this
             let helper = function(url,href){
                 return function(e) {
-                    that.readMdFromGithub(url)
                     localStorage.setItem('content-key',href.getAttribute('data'))
+                    that.readMdFromGithub(url)
                 }
             }
             let uri = ''
@@ -33,12 +34,16 @@ export default {
             }
         },
         readMdFromGithub(uri){ // 异步请求github上的仓库文章
-            let that = this
+            let keys = localStorage.getItem('content-key').split('*'),
+                that = this,
+                base = ''
+            keys.pop() // 最后一个元素代表Markdown文件命名,不属于路径
+            base = this.api + keys.join('/')
             return new Promise(function(resolve,reject){
                 axios.get(uri)
                 .then(res=> {
-                    that.$emit("flushcontent",res.data)
-                    that.conetnt = res.data
+                    that.content = replaceImgPath(base,res.data) // 图片路径换为绝对路径
+                    that.$emit("flushcontent",that.content)
                     resolve('ok')
                 })
                 .catch(err=> reject(err))
@@ -79,7 +84,7 @@ export default {
             defaultUri = this.getMdUri(this.hrefs[0],true)
             await this.readMdFromGithub(defaultUri)
         }
-        this.handleClickOnHref()
+        this.handleClickOnHref() // 为<a>标签绑定事件
     }
 }
 </script>
