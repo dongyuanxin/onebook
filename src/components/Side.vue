@@ -49,6 +49,7 @@ export default {
                 axios.get(uri)
                 .then(res=> {
                     that.content = replaceImgPath(base,res.data) // 图片路径换为绝对路径
+                    console.log(that.content)
                     that.$emit("flushcontent",that.content)
                     resolve('ok')
                 })
@@ -66,9 +67,9 @@ export default {
     mounted:function(){
         // 获取 后台的文章目录
         if(this.summary === "") { // 只一次加载
-            axios.get("/api/summary")
+            axios.get(this.api + 'book.json')
             .then(res=>{
-                this.summary = json2html(res.data)
+                this.summary = json2html(res.data.summary)
             })
         }
     },
