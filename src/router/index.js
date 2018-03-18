@@ -22,17 +22,17 @@ export default new Router({
     {
       path:'/book',
       name:"Blog",
-      component:Blog
-    },
-    {
-      path:'/book/:user/:name', // user : githubID ; name: 仓库名字
-      name:"BlogWithUserName",
-      component:Blog
-    },
-    {
-      path:'/book/:user', // user : githubID ; 仓库名字默认是 : book
-      name:"BlogWithUser",
-      component:Blog
+      component:Blog,
+      children:[
+        {
+          path:':user',
+          component:Blog
+        },
+        {
+          path:':user/:name',
+          component:Blog
+        }
+      ]
     },
     {
       path:'/paper',
