@@ -5,8 +5,8 @@
         @mouseleave="iconName=''"
         @click="moveSide()"
         ></span>
-        <span class="iconfont icon-fenlei left-icon"  @mouseenter="iconName='分享 --让世界倾听你的声音'" @mouseleave="iconName=''" @click="jumpTo('/paper','share')"></span>
-        <span class="iconfont icon-weibiaoti1 right-icon"  @mouseenter="iconName='首页'" @mouseleave="iconName=''" @click="jumpTo('/')"></span>
+        <span class="iconfont icon-fenxiang left-icon"  @mouseenter="iconName='分享 --让世界倾听你的声音'" @mouseleave="iconName=''" @click="jumpTo('/paper','share')"></span>
+        <span class="iconfont icon-shouye right-icon"  @mouseenter="iconName='首页'" @mouseleave="iconName=''" @click="jumpTo('/')"></span>
         <span class="iconfont icon-github right-icon"  @mouseenter="iconName='源码'" @mouseleave="iconName=''" @click="jumpTo('https://github.com/godbmw/onebook')"></span>
         <div class="icon-name" :style="{opacity:iconNameOpacity}">{{iconName}}</div>
     </div>

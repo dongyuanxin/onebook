@@ -34,8 +34,8 @@ export default {
           href:'/book'
         },
         {
-          info:'See WORK',
-          href:'/book'
+          info:'Write Now',
+          href:'/paper'
         }
       ],
       index:0,
