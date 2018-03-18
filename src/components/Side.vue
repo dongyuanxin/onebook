@@ -86,7 +86,7 @@ export default {
         try{
             await this.readMdFromGithub(defaultUri)
         } catch(error) { // 如果github用户名和仓库名错误，那么重新拉取 博客作者 的 book
-            this.api = 'https://raw.githubusercontent.com/godbmw/passages/master/'
+            this.api = 'https://raw.githubusercontent.com/godbmw/book/master/'
             defaultUri = this.getMdUri(this.hrefs[0],true)
             await this.readMdFromGithub(defaultUri)
         }
