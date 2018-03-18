@@ -10,7 +10,8 @@ const store = new Vuex.Store({
         server:{
             ip:'127.0.0.1',
             port: 80
-        }
+        },
+        url:'http://localhost:8080'
     },
     mutations:{
         checkChrome(state,userAgent) {
