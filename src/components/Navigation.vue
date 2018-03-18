@@ -2,8 +2,8 @@
   <div class="nav-outer">
       <div class="nav-container">
           <div class="nav-option"
-          v-for="item in reverseOptions"
-          @click="jumpTo(item.href)">
+            v-for="item in reverseOptions"
+            @click="jumpTo(item.href)">
               {{ item.name }}
           </div>
       </div>
@@ -16,16 +16,16 @@ export default {
         return {
             options:[
                 {
-                    name:'Blog',
-                    href:'/blog'
+                    name:'Home',
+                    href:'/home'
                 },
                 {
-                    name:'Work',
-                    href:'/work'
+                    name:'Book',
+                    href:'/book'
                 },
                 {
-                    name:'About',
-                    href:'/about'
+                    name:'Write',
+                    href:'/paper'
                 }
             ]
         }
