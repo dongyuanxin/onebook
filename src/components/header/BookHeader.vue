@@ -1,13 +1,15 @@
 <template>
     <div class="book-header">
         <span class="iconfont icon-sort left-icon" 
+        style="color:#5cb85c"
         @mouseenter="iconName='目录'" 
         @mouseleave="iconName=''"
         @click="moveSide()"
         ></span>
-        <span class="iconfont icon-fenxiang left-icon"  @mouseenter="iconName='分享 --让世界倾听你的声音'" @mouseleave="iconName=''" @click="jumpTo('/paper','share')"></span>
-        <span class="iconfont icon-shouye right-icon"  @mouseenter="iconName='首页'" @mouseleave="iconName=''" @click="jumpTo('/')"></span>
-        <span class="iconfont icon-github right-icon"  @mouseenter="iconName='源码'" @mouseleave="iconName=''" @click="jumpTo('https://github.com/godbmw/onebook')"></span>
+        <span class="iconfont icon-fenxiang left-icon" style="color:#337ab7"  @mouseenter="iconName='分享 --让世界倾听你的声音'" @mouseleave="iconName=''" @click="jumpTo('/paper','share')"></span>
+        <span class="iconfont icon-changjianwenti left-icon" style="color:#d9534f" @mouseenter="iconName='疑问'" @mouseleave="iconName=''" @click="jumpTo('http://www.godbmw.com/book?key=Statement*介绍和说明.md')"></span>
+        <span class="iconfont icon-shouye right-icon"  style="color:#663300" @mouseenter="iconName='首页'" @mouseleave="iconName=''" @click="jumpTo('/')"></span>
+        <span class="iconfont icon-github right-icon" style="color:#663366" @mouseenter="iconName='源码'" @mouseleave="iconName=''" @click="jumpTo('https://github.com/godbmw/onebook')"></span>
         <div class="icon-name" :style="{opacity:iconNameOpacity}">{{iconName}}</div>
     </div>
 </template>
@@ -64,8 +66,9 @@ export default {
 }
 /** icon动画样式 **/
 .book-header .iconfont {
-  opacity: 0.3;
+  opacity: 0.7;
   transition: all 0.3s linear;
+  font-size:1.2em;
 }
 .book-header .iconfont:hover {
   cursor: pointer;
