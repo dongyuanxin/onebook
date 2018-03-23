@@ -8,13 +8,10 @@ import {json2html} from "@/utils/json2html.js"
 import {replaceImgPath} from "@/utils/replaceImgPath.js"
 export default {
     data(){
-        let user = this.$route.params.user , name = this.$route.params.name // github名字和仓库名
-        let api = 'https://raw.githubusercontent.com/' + ((user)?(user+'/'):'godbmw/') + ((name)?(name+'/'):'book/') + 'master/'
-        console.log("Your github raw api is : " + api)
         return {
             summary:"", // 目录的string格式
             hrefs:"",
-            api,
+            api:"",
             content:""
         }
     },
@@ -61,15 +58,29 @@ export default {
                 localStorage.setItem('content-key',data) // 更新contentKey,用于 原页面 刷新的验证
             }
             return (this.api + data.split('*').join('/'))
+        },
+        getBookJson(uri){
+            return new Promise((resolve,reject)=>{
+                axios.get(uri)
+                .then( res => resolve(res.data.summary))
+                .catch( err => reject(err.message) )
+            })
         }
     },
-    mounted:function(){
-        // 获取 后台的文章目录
-        if(this.summary === "") { // 只一次加载
-            axios.get(this.api + 'book.json')
-            .then(res=>{
-                this.summary = json2html(res.data.summary)
-            })
+    beforeMount(){
+        let user = this.$route.params.user , name = this.$route.params.name // github名字和仓库名
+        this.api = 'https://raw.githubusercontent.com/' + ((user)?(user+'/'):'godbmw/') + ((name)?(name+'/'):'book/') + 'master/'
+        console.log("Your github raw api is : " + this.api)
+    },
+    mounted:async function(){
+        let summary = ''
+        try{
+            summary = await this.getBookJson(this.api + 'book.json')
+        } catch (err) {
+            this.api = 'https://raw.githubusercontent.com/godbmw/book/master/'
+            summary = await this.getBookJson(this.api + 'book.json')
+        } finally {
+            this.summary = json2html(summary)
         }
     },
     async updated(){
@@ -78,16 +89,14 @@ export default {
         if( this.$route.query.hasOwnProperty('key')) { // 如果url中给出了文章key,那么拉取对应文章,并且覆盖之前的 content-key
             defaultUri = this.api + this.$route.query.key.split('*').join('/')
             localStorage.setItem('content-key',this.$route.query.key)
-        } else if( localStorage.getItem('content-key') !==null  ){ // 然后,读取缓存中的contentKey属性判断是否是"原页面刷新"
+        } else if( localStorage.getItem('content-key') !== null ) { // 读取缓存中的contentKey属性判断是否是"原页面刷新"
             defaultUri = this.api + localStorage.getItem('content-key').split('*').join('/')
-        } else { // 在不显示给出uri与本地没有缓存的情况下 : 默认拉取第一个<a>标签的文章内容,并且给 content-key 赋值
-            defaultUri = this.getMdUri(this.hrefs[0],true)
         }
         try{
             await this.readMdFromGithub(defaultUri)
-        } catch(error) { // 如果github用户名和仓库名错误，那么重新拉取 博客作者 的 book
-            this.api = 'https://raw.githubusercontent.com/godbmw/book/master/'
+        } catch(error) { // 404 error: content-key错误(不同仓库下的遗留),重置
             defaultUri = this.getMdUri(this.hrefs[0],true)
+            console.log( 'redirect: ' + defaultUri )
             await this.readMdFromGithub(defaultUri)
         }
         this.handleClickOnHref() // 为<a>标签绑定事件
