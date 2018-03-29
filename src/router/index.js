@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home'
-import Blog from '@/views/Blog'
+import Book from '@/views/book/Index'
 import Paper from '@/views/Paper'
 
 Vue.use(Router)
@@ -21,16 +21,16 @@ export default new Router({
     },
     {
       path:'/book',
-      name:"Blog",
-      component:Blog,
+      name:"Book",
+      component:Book,
       children:[
         {
           path:':user',
-          component:Blog
+          component:Book
         },
         {
           path:':user/:name',
-          component:Blog
+          component:Book
         }
       ]
     },

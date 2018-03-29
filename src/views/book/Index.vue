@@ -10,14 +10,12 @@
         <div class="blog-cover" v-show="showSide === true" @click="showSide=false">
             <cover-layer></cover-layer>
         </div>
-        <my-footer></my-footer>
     </div>
 </template>
 <script>
-import Side from '@/components/Side'
-import BookHeader from '@/components/header/BookHeader'
+import Side from '@/views/book/BookSide'
+import BookHeader from '@/views/book/BookHeader'
 import CoverLayer from '@/components/CoverLayer'
-import MyFooter from '@/views/Footer'
 
 import hljs from 'highlight.js'
 import 'highlight.js/styles/atom-one-light.css'
@@ -50,8 +48,7 @@ export default {
     components:{
         Side,
         BookHeader,
-        CoverLayer,
-        MyFooter
+        CoverLayer
     }
 }
 </script>
