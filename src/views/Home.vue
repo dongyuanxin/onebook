@@ -1,16 +1,18 @@
 <template>
     <div>
-        <navigation></navigation>
-        <div class="dev-home" 
+        <navigation>
+          <span slot="brand">One-Book</span>
+        </navigation>
+        <div class="home-bg" 
         v-for=" (item , index) in imgSrcArr "
         :style=" { backgroundImage : 'url('+item+')' , opacity : bgOpacity( index )} ">
         </div>
-        <div class="dev-intro">
-            <div class="dev-intro--title" 
+        <div class="home-intro">
+            <div class="home-intro--title" 
             @click="jumpTo( href )">
                 {{ intro.title }}
             </div>
-            <div class="dev-intro--sentence">
+            <div class="home-intro--sentence">
                 {{ intro.sentence }}
             </div>
         </div>
@@ -105,7 +107,7 @@ export default {
             opacity: 0;
         }
     }
-    .dev-home {
+    .home-bg {
         width: 100%;
         height: 100vh;
         background-size: 100% 100vh;
@@ -114,7 +116,7 @@ export default {
         position: fixed;
         /* filter: blur(2px); */
     }
-    .dev-intro {
+    .home-intro {
         width:100%;
         position: fixed;
         z-index: 300;
@@ -124,16 +126,16 @@ export default {
         color: white;
         font-size: 100px;
     }
-    .dev-intro {
+    .home-intro {
         transition: all 1s linear;
         transform: translate(-50% , -70%);
         animation: toggler 4s linear infinite; 
     }
-    .dev-intro--title {
+    .home-intro--title {
         font-size : 1em;
         cursor: pointer;
     }
-    .dev-intro--sentence {
+    .home-intro--sentence {
         font-size: 0.5em;
     }
 </style>

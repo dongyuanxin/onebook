@@ -1,5 +1,8 @@
 <template>
   <div class="nav-outer">
+      <div class="nav-brand">
+          <slot name="brand"></slot>
+      </div>
       <div class="nav-container">
           <div class="nav-option"
             v-for="item in reverseOptions"
@@ -68,6 +71,22 @@ export default {
         height: 100%;
         padding-left:10px;
         padding-right:10px;
+    }
+    .nav-brand {
+        text-align: center;
+        font-size:35px;
+        font-weight: 900;
+        color:white;
+        float: left;
+        height: 100%;
+        vertical-align: center;
+        display: flex;
+        align-items: center;
+        padding-left: 15%;  
+        font-weight: 900;
+        font-style:italic;
+        color:#FF6666;
+        font-family: 'Comic Sans MS', cursive;
     }
     .nav-option{
         /* 实现水平垂直居中 */
