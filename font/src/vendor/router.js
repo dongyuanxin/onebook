@@ -3,7 +3,7 @@ import Router from "vue-router";
 
 Vue.use(Router);
 
-const Error = () => import("@/views/Error");
+const _Error = () => import("@/views/Error");
 const Test = () => import("@/views/Test");
 
 const router = new Router({
@@ -11,7 +11,7 @@ const router = new Router({
     {
       path: "*",
       name: "error",
-      component: Error
+      component: _Error
     },
     {
       path: "/test",
