@@ -1,15 +1,22 @@
 import Vue from "vue";
 import Router from "vue-router";
-import HelloWorld from "@/components/HelloWorld";
 
 Vue.use(Router);
+
+const Error = () => import("@/views/Error");
+const Test = () => import("@/views/Test");
 
 const router = new Router({
   routes: [
     {
-      path: "/",
-      name: "HelloWorld",
-      component: HelloWorld
+      path: "*",
+      name: "error",
+      component: Error
+    },
+    {
+      path: "/test",
+      name: "test",
+      component: Test
     }
   ],
   scrollBehavior(to, from, savedPosition) {
