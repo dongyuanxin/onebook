@@ -1,0 +1,35 @@
+*,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* border-box 盒模型计算大小 */
+div {
+  box-sizing: border-box;
+}
+
+/* 浮动清除 */
+.clear-float::after {
+  clear: both;
+  display: block;
+  visibility: hidden;
+  content: " ";
+  overflow: hidden;
+}
+
+/* 滚动条样式 */
+body::-webkit-scrollbar,
+.scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track,
+.scroll::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+body::-webkit-scrollbar-thumb,
+.scroll::-webkit-scrollbar-thumb {
+  background: #222;
+}
