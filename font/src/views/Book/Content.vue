@@ -5,6 +5,7 @@
 <script>
 import axios from "axios";
 import Markdown from "@/vendor/markdown.js";
+import hub from "@/vendor/hub.js";
 const mdApi = new Markdown();
 export default {
   props: {
@@ -47,6 +48,7 @@ export default {
       let path = this.rootUrl + this.psgId.replace(/\*/g, "/");
       axios.get(path).then(res => {
         this.content = res.data;
+        hub.$emit("resolve", this.content);
       });
     }
   },

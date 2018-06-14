@@ -3,9 +3,11 @@
     <div class="book-content--container">
       <book-content :root-url="rootUrl" :psg-id="psgId"></book-content>
     </div>
+    <nav-footer></nav-footer>
   </div>
 </template>
 <script>
+import NavFooter from "@/components/NavFooter";
 import BookContent from "@/views/Book/Content";
 import Passage from "@/vendor/passage";
 import { configFile } from "@/vendor/setting";
@@ -52,7 +54,8 @@ export default {
     }
   },
   components: {
-    BookContent
+    BookContent,
+    NavFooter
   }
 };
 </script>
