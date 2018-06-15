@@ -1,13 +1,15 @@
 <template>
   <div>
+    <book-catalogue :summary="summary"></book-catalogue>
     <div class="book-content--container">
-      <book-content :root-url="rootUrl" :psg-id="psgId"></book-content>
+      <book-content :root-url="rootUrl" ></book-content>
     </div>
     <nav-footer></nav-footer>
   </div>
 </template>
 <script>
 import NavFooter from "@/components/NavFooter";
+import BookCatalogue from "@/views/Book/Catalogue";
 import BookContent from "@/views/Book/Content";
 import Passage from "@/vendor/passage";
 import { configFile } from "@/vendor/setting";
@@ -27,7 +29,6 @@ export default {
   data() {
     return {
       rootUrl: "",
-      psgId: "",
       summary: {}
     };
   },
@@ -46,7 +47,6 @@ export default {
         .checkConfig(this.rootUrl)
         .then(data => {
           this.summary = data.summary;
-          this.psgId = this.$route.query.psgId || this.$route.query.psgid;
         })
         .catch(error => {
           this.$router.push(helpMd);
@@ -55,7 +55,8 @@ export default {
   },
   components: {
     BookContent,
-    NavFooter
+    NavFooter,
+    BookCatalogue
   }
 };
 </script>
