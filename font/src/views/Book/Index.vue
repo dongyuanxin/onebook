@@ -36,10 +36,21 @@ export default {
         .checkConfig(this.rootUrl)
         .then(data => {
           this.summary = data.summary;
+          this.logRoute(true);
         })
         .catch(error => {
           this.$router.push(helpMdRoute);
+          this.logRoute(false);
         });
+    },
+    logRoute(right) {
+      if (right) {
+        window.localStorage.setItem("bookPath", this.$route.path);
+        window.localStorage.setItem("bookPsgId", this.$route.query.psgId);
+      } else {
+        window.localStorage.setItem("bookPath", "");
+        window.localStorage.setItem("bookPsgId", "");
+      }
     }
   },
   components: {
