@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import { helpMdRoute } from "@/vendor/setting";
 
 Vue.use(Router);
 
@@ -13,6 +14,11 @@ const Test = () => import("@/views/Test");
 
 const router = new Router({
   routes: [
+    {
+      path: "/",
+      name: "home",
+      redirect: helpMdRoute
+    },
     {
       path: "/book/:platform/:user/:depository",
       name: "book",
@@ -45,6 +51,23 @@ const router = new Router({
     } else {
       return { x: 0, y: 0 };
     }
+  }
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.name === "book" || to.path.startsWith("/book")) {
+    if (
+      to.query.hasOwnProperty("psgId") &&
+      to.params.hasOwnProperty("platform") &&
+      to.params.hasOwnProperty("user") &&
+      to.params.hasOwnProperty("depository")
+    ) {
+      next();
+    } else {
+      next(helpMdRoute);
+    }
+  } else {
+    next();
   }
 });
 

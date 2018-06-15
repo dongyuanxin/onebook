@@ -12,19 +12,8 @@ import NavFooter from "@/components/NavFooter";
 import BookCatalogue from "@/views/Book/Catalogue";
 import BookContent from "@/views/Book/Content";
 import Passage from "@/vendor/passage";
-import { configFile } from "@/vendor/setting";
+import { configFile, helpMdRoute } from "@/vendor/setting";
 const psgApi = new Passage();
-const helpMd = {
-  name: "book",
-  params: {
-    platform: "github",
-    user: "dongyuanxin",
-    depository: "book"
-  },
-  query: {
-    psgId: "Statement/介绍和说明.md"
-  }
-};
 export default {
   data() {
     return {
@@ -49,7 +38,7 @@ export default {
           this.summary = data.summary;
         })
         .catch(error => {
-          this.$router.push(helpMd);
+          this.$router.push(helpMdRoute);
         });
     }
   },
