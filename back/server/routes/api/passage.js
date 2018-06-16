@@ -7,17 +7,17 @@ let passageApi = new Passage();
 
 // 抓取最近更新的文章
 const fetch = async (ctx, next) => {
-  let { page, step, needSummary } = ctx.request.body,
+  let { page, step, userId } = ctx.request.body,
     results = [];
 
-  if (page === undefined || step === undefined) {
+  if (page === undefined || step === undefined || isEmptyStr(userId)) {
     ctx.response.body = {
       code: -1,
       msg: "Parameter is empty"
     };
     return;
   }
-  results = await passageApi.fetch(page, step, needSummary);
+  results = await passageApi.fetch(page, step, userId);
   ctx.response.body = {
     code: 0,
     results
@@ -25,41 +25,27 @@ const fetch = async (ctx, next) => {
   return;
 };
 
-// 创建最新的文章
-const create = async (ctx, next) => {
-  let { title, summary, content, category, operationPwd } = ctx.request.body,
+// 收藏文章
+const collect = async (ctx, next) => {
+  let { title, loc, userId } = ctx.request.body,
     success = false;
-  if (
-    isEmptyStr(title) ||
-    isEmptyStr(content) ||
-    isEmptyStr(summary) ||
-    isEmptyStr(operationPwd)
-  ) {
+  if (isEmptyStr(title) || isEmptyStr(userId)) {
     ctx.response.body = {
       code: -1,
       msg: "Parameter is empty"
     };
     return;
   }
-  if (operationPwd !== global.operationPwd) {
-    ctx.response.body = {
-      code: -1,
-      msg: "Operation pwd is wrong"
-    };
-    ctx.status = 401;
-    return;
-  }
-  category = isEmptyStr(category) ? "未分类" : category.trim();
-  success = await passageApi.create(title, summary, content, category);
+  success = await passageApi.collect(title, loc, userId);
   if (success) {
     ctx.response.body = {
       code: 0,
-      msg: "Create passage success"
+      msg: "Collect passage success"
     };
   } else {
     ctx.response.body = {
       code: -1,
-      msg: "Create passage fail"
+      msg: "Collect passage fail"
     };
   }
   return;
@@ -67,21 +53,10 @@ const create = async (ctx, next) => {
 
 // 删除文章
 const del = async (ctx, next) => {
-  let { id, operationPwd } = ctx.request.body,
+  let { id } = ctx.request.body,
     success = false;
-  if (id === undefined || isEmptyStr(operationPwd)) {
-    ctx.response.body = {
-      code: -1,
-      msg: "Parameter is empty"
-    };
-    return;
-  }
-  if (operationPwd !== global.operationPwd) {
-    ctx.response.body = {
-      code: -1,
-      msg: "Operation pwd is wrong"
-    };
-    ctx.status = 401;
+  if (id === undefined) {
+    ctx.response.body = { code: -1, msg: "Parameter is empty" };
     return;
   }
   success = await passageApi.del(id);
@@ -101,6 +76,6 @@ const del = async (ctx, next) => {
 
 exports = module.exports = {
   "POST /api/passage/fetch": fetch,
-  "POST /api/passage/create": create,
+  "POST /api/passage/collect": collect,
   "POST /api/passage/del": del
 };

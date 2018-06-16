@@ -18,14 +18,10 @@ Passage.prototype.fetch = async (page, step, needSummary) => {
       let item = {
         id: row.Id,
         title: row.title,
-        scanTimes: row.scan_times,
-        category: row.category,
+        loc: JSON.parse(row.loc),
         createTime: moment(row.create_time).format("YYYY-MM-DD HH:mm:ss"),
         updateTime: moment(row.update_time).format("YYYY-MM-DD HH:mm:ss")
       };
-      if (needSummary && needSummary === true) {
-        item.summary = row.summary || "";
-      }
       return item;
     });
   } catch (error) {
@@ -34,16 +30,15 @@ Passage.prototype.fetch = async (page, step, needSummary) => {
   }
 };
 
-// 创建文章
-Passage.prototype.create = async (title, summary, content, category) => {
+// 收藏文章
+Passage.prototype.collect = async (title, loc, userId) => {
   let table = "passage";
   let sql = `insert into ${table} set ? ;`;
   try {
     let res = await query(sql, {
       title,
-      summary,
-      content,
-      category
+      loc: JSON.stringify(loc),
+      user_id: userId
     });
     return res.affectedRows > 0 ? true : false;
   } catch (error) {

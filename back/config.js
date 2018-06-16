@@ -7,7 +7,7 @@ const { sha256 } = require("./vendor/util");
 const port = 80;
 
 const mysql = {
-  host: "172.31.73.103",
+  host: "172.31.73.150",
   port: 3306,
   user: "dongyuanxin",
   password: "dongyuanxin",
