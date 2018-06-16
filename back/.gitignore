@@ -1,0 +1,9 @@
+# NodeJs
+node_modules/
+
+# vscode
+.vscode/
+
+# test-dir
+test/
+

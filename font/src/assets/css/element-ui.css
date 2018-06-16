@@ -1,0 +1,13 @@
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: #222 !important;
+  color: #fff !important;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled):hover {
+  color: #555 !important;
+}
+
+.el-popover,
+.el-popover {
+  padding: 0 !important;
+}

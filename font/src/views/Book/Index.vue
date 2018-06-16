@@ -1,31 +1,23 @@
 <template>
   <div>
+    <book-catalogue :summary="summary"></book-catalogue>
     <div class="book-content--container">
-      <book-content :root-url="rootUrl" :psg-id="psgId"></book-content>
+      <book-content :root-url="rootUrl" ></book-content>
     </div>
+    <nav-footer></nav-footer>
   </div>
 </template>
 <script>
+import NavFooter from "@/components/NavFooter";
+import BookCatalogue from "@/views/Book/Catalogue";
 import BookContent from "@/views/Book/Content";
 import Passage from "@/vendor/passage";
-import { configFile } from "@/vendor/setting";
+import { configFile, helpMdRoute } from "@/vendor/setting";
 const psgApi = new Passage();
-const helpMd = {
-  name: "book",
-  params: {
-    platform: "github",
-    user: "dongyuanxin",
-    depository: "book"
-  },
-  query: {
-    psgId: "Statement/介绍和说明.md"
-  }
-};
 export default {
   data() {
     return {
       rootUrl: "",
-      psgId: "",
       summary: {}
     };
   },
@@ -44,15 +36,27 @@ export default {
         .checkConfig(this.rootUrl)
         .then(data => {
           this.summary = data.summary;
-          this.psgId = this.$route.query.psgId || this.$route.query.psgid;
+          this.logRoute(true);
         })
         .catch(error => {
-          this.$router.push(helpMd);
+          this.$router.push(helpMdRoute);
+          this.logRoute(false);
         });
+    },
+    logRoute(right) {
+      if (right) {
+        window.localStorage.setItem("bookPath", this.$route.path);
+        window.localStorage.setItem("bookPsgId", this.$route.query.psgId);
+      } else {
+        window.localStorage.setItem("bookPath", "");
+        window.localStorage.setItem("bookPsgId", "");
+      }
     }
   },
   components: {
-    BookContent
+    BookContent,
+    NavFooter,
+    BookCatalogue
   }
 };
 </script>

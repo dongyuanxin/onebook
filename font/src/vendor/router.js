@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import { helpMdRoute } from "@/vendor/setting";
 
 Vue.use(Router);
 
@@ -13,6 +14,11 @@ const Test = () => import("@/views/Test");
 
 const router = new Router({
   routes: [
+    {
+      path: "/",
+      name: "home",
+      redirect: helpMdRoute
+    },
     {
       path: "/book/:platform/:user/:depository",
       name: "book",
@@ -46,6 +52,44 @@ const router = new Router({
       return { x: 0, y: 0 };
     }
   }
+});
+
+const isEmptyStr = str => {
+  return str === null || str === "null" || str === undefined || str === ""; // vue-router 会强制转化 null => "null"
+};
+
+router.beforeEach((to, from, next) => {
+  if (to.name === "book" || to.path.startsWith("/book")) {
+    let queryRight = !isEmptyStr(to.query.psgId),
+      paramsRight =
+        !isEmptyStr(to.params.platform) &&
+        !isEmptyStr(to.params.user) &&
+        !isEmptyStr(to.params.depository);
+    if (queryRight && paramsRight) {
+      return next();
+    } else if (!queryRight && paramsRight) {
+      let path = window.localStorage.getItem("bookPath"),
+        psgId = window.localStorage.getItem("bookPsgId");
+      if (
+        isEmptyStr(path) === false &&
+        isEmptyStr(psgId) === false &&
+        to.path === path
+      ) {
+        return next({
+          name: "book",
+          params: to.params,
+          query: {
+            psgId
+          }
+        });
+      } else {
+        return next(helpMdRoute);
+      }
+    } else {
+      return next(helpMdRoute);
+    }
+  }
+  return next();
 });
 
 export default router;

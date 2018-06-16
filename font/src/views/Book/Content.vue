@@ -5,33 +5,35 @@
 <script>
 import axios from "axios";
 import Markdown from "@/vendor/markdown.js";
+import hub from "@/vendor/hub.js";
 const mdApi = new Markdown();
 export default {
   props: {
     rootUrl: {
       type: String,
       required: true
-    },
-    psgId: {
-      type: String,
-      required: true
     }
   },
   data() {
     return {
-      timer: null,
       content: ""
     };
   },
   mounted() {
-    this.timer = setInterval(() => {
-      if (
-        this.isEmptyStr(this.rootUrl) === false &&
-        this.isEmptyStr(this.psgId) === false
-      ) {
-        this.handleResolve();
+    if (this.isEmptyStr(this.rootUrl) === false) {
+      this.fetchContent();
+    }
+  },
+  watch: {
+    rootUrl: function(val, oldVal) {
+      console.log(val);
+      if (val !== oldVal || this.isEmptyStr(val) === false) {
+        this.fetchContent();
       }
-    }, 50);
+    },
+    $route(to, from) {
+      this.fetchContent();
+    }
   },
   computed: {
     htmlContent() {
@@ -42,16 +44,13 @@ export default {
     isEmptyStr(str) {
       return str === undefined || str === "";
     },
-    handleResolve() {
-      clearInterval(this.timer);
-      let path = this.rootUrl + this.psgId.replace(/\*/g, "/");
+    fetchContent() {
+      let path = this.rootUrl + this.$route.query.psgId.replace(/\*/g, "/");
       axios.get(path).then(res => {
         this.content = res.data;
+        hub.$emit("resolve", this.content);
       });
     }
-  },
-  beforeDestroy() {
-    clearInterval(this.timer);
   }
 };
 </script>
