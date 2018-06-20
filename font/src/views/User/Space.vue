@@ -1,8 +1,7 @@
 <template>
     <div class="space">
         <el-header>
-            <p class="username">用户: {{user.userId}}</p>
-            <p class="logout" @click="logout">登出</p>
+            <el-button class="logout" @click="logout">登出</el-button>
         </el-header>
         <div class="space-content">
             <el-table :data="tableData" style="width: 100%">
@@ -14,7 +13,7 @@
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" width="120">
                     <template slot-scope="scope">
-                        <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                        <el-button @click="readArticle(scope.row)" type="text" size="small">查看</el-button>
                         <el-button @click="delArticle(scope.row)" type="text" size="small">删除</el-button>
                     </template>
                 </el-table-column>
@@ -29,44 +28,73 @@ export default {
       return {
         tableData: [],
         user: {
-            userId: "pengrunbin"
-        }
+            userId: "",
+            base: ""
+        },
+        step: 10,
+        page: 1
       }
     },
     methods: {
         getContent() {
-            // 测试数据
-            axios.get("https://easy-mock.com/mock/5b25fd3c0f6ae915edc0fba0/user/space")
-            .then((res) => {
-                this.tableData = res.data.data.tableData
-            })
-
             axios.post('/api/passage/fetch', {
-                page: 2,
-                step: 1,
-                userId: 'test'
+                page: this.page,
+                step: this.step,
+                userId: this.user.userId
             })
             .then(res => {
-                console.log(res.data)
+                this.tableData = res.data.results
             })
         },
-        handleClick(row) {
-            console.log(row.id);
+        readArticle(row) {
+            this.$router.push(row.loc)
         },
         delArticle(row) {
             axios.post('/api/passage/del', {
                 id: row.id
             })
+            .then(res => {
+                if (res.code == 0) {
+                    let index = -1;
+                    for(let i = 0; i < this.tableData.length; i++) {
+                        if (this.tableData[i].id == row.id) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index > -1) {
+                        this.tableData.splice(index, 1)
+                    }
+                }
+            })
         },
         logout() {
-            console.log('logout')
+            axios.post('/api/user/logout', {
+                userId: this.user.userId,
+                base: this.user.base
+            })
+            .then(res => {
+                if (res.data.code == 0) {
+                    this.$alert('您已登出！', '提示', {
+                        confirmButtonText: '确定'
+                    })
+                    this.$router.push('/user/login')
+                }
+            })
         },
         checkStatus() {
-
+            if (window.sessionStorage.getItem('user_id') == null) {
+                this.$alert('您还未登陆！', '提示', {
+                    confirmButtonText: '确定'
+                })
+                this.$router.push('/user/login')
+            }
         }
     },
-    mounted() {
-        this.user.userId = this.$route.params.id
+    created() {
+        this.checkStatus()
+        this.user.userId = window.sessionStorage.getItem('user_id')
+        this.user.base = window.sessionStorage.getItem('base')
         this.getContent()
     }
 }

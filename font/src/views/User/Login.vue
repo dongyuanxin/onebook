@@ -48,13 +48,9 @@ export default {
           this.resetForm()
         }
         else {
-          console.log('login Ok')
-          this.$router.push({
-            name: 'space',
-            params: {
-              id: this.formLabelAlign.userId
-            }
-          })
+          this.base = res.data.results.base
+          this.user_id = res.data.results.user_id
+          this.checkStatus()
         }
       })
       .catch(err => {
@@ -64,6 +60,23 @@ export default {
     resetForm() {
       this.formLabelAlign.userId = ""
       this.formLabelAlign.password = ""
+    },
+    checkStatus() {
+      axios.post('/api/user/check', {
+        userId: this.user_id,
+        base: this.base
+      })
+      .then(res => {
+        if (res.data.code == 0) {
+          window.sessionStorage.setItem('base', this.base)
+          window.sessionStorage.setItem('user_id', this.user_id)
+          this.$router.push('/user/space')
+        } else if (res.data.code == -1) {
+          this.$alert('您已登陆！', '提示', {
+            confirmButtonText: '确定'
+          })
+        }
+      })
     }
   }
 };
@@ -83,6 +96,12 @@ export default {
 .title {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 40px;
+}
+@media screen and (max-width: 800px){
+  .pg-Login {
+    width: 100%;
+    margin: 0;
+  }
 }
 </style>
 
