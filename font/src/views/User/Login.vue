@@ -78,7 +78,7 @@ export default {
   height: 100vh;
 }
 .pg-login {
-  width: 80%;
+  width: 60%;
   text-align: center;
   margin: 0 auto;
 }
