@@ -96,7 +96,7 @@ export default {
         })
         .then(res => {
           if (res.data.code === 0) {
-            this.tableData.splice(scope.$index);
+            this.tableData.splice(scope.$index, 1);
             this.alert("Delete success", "success");
           } else {
             this.alert(res.msg, "error");
