@@ -28,7 +28,7 @@ const fetch = async (ctx, next) => {
 // 收藏文章
 const collect = async (ctx, next) => {
   let { title, loc, userId } = ctx.request.body,
-    success = false;
+    results = null;
   if (isEmptyStr(title) || isEmptyStr(userId)) {
     ctx.response.body = {
       code: -1,
@@ -36,17 +36,11 @@ const collect = async (ctx, next) => {
     };
     return;
   }
-  success = await passageApi.collect(title, loc, userId);
-  if (success) {
-    ctx.response.body = {
-      code: 0,
-      msg: "Collect passage success"
-    };
+  results = await passageApi.collect(title, loc, userId);
+  if (results.success) {
+    ctx.response.body = { code: 0, msg: "Collect passage success", results };
   } else {
-    ctx.response.body = {
-      code: -1,
-      msg: "Collect passage fail"
-    };
+    ctx.response.body = { code: -1, msg: "Collect passage fail" };
   }
   return;
 };
@@ -74,8 +68,21 @@ const del = async (ctx, next) => {
   return;
 };
 
+const check = async (ctx, next) => {
+  let { loc, userId } = ctx.request.body,
+    results = false;
+  if (loc === null || loc === undefined || isEmptyStr(userId)) {
+    ctx.response.body = { code: -1, msg: "Parameter is empty" };
+    return;
+  }
+  results = await passageApi.check(userId, loc);
+  ctx.response.body = { code: 0, results };
+  return;
+};
+
 exports = module.exports = {
   "POST /api/passage/fetch": fetch,
   "POST /api/passage/collect": collect,
-  "POST /api/passage/del": del
+  "POST /api/passage/del": del,
+  "POST /api/passage/check": check
 };
