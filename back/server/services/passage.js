@@ -8,12 +8,12 @@ const { query } = require(path.join(global.path, "vendor", "mysql"));
 function Passage() {}
 
 // 抓取最近更新的文章
-Passage.prototype.fetch = async (page, step, needSummary) => {
+Passage.prototype.fetch = async (page, step, userId) => {
   let table = "passage",
     offset = (page - 1) * step;
-  let sql = `select * from ${table} order by create_time desc limit ${offset} , ${step} ; `;
+  let sql = `select * from ${table} where user_id = ? order by create_time desc limit ${offset} , ${step} ; `;
   try {
-    let rows = await query(sql);
+    let rows = await query(sql, [userId]);
     return rows.map(row => {
       let item = {
         id: row.Id,
