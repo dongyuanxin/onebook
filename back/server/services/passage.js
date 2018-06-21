@@ -40,7 +40,16 @@ Passage.prototype.collect = async (title, loc, userId) => {
       loc: JSON.stringify(loc),
       user_id: userId
     });
-    return res.affectedRows > 0 ? true : false;
+    if (res.affectedRows === 0) {
+      return {
+        success: false
+      };
+    } else {
+      return {
+        success: true,
+        insertId: res.insertId
+      };
+    }
   } catch (error) {
     console.log("Error at Passage.create", error.message);
     return false;
@@ -56,6 +65,27 @@ Passage.prototype.del = async id => {
     return res.affectedRows > 0 ? true : false;
   } catch (error) {
     console.log("Error at Passage.del", error.message);
+    return false;
+  }
+};
+
+Passage.prototype.check = async (userId, loc) => {
+  let table = "passage";
+  let sql = `select * from ${table} where user_id = ? and loc = ?;`;
+  try {
+    let res = await query(sql, [userId, loc]);
+    if (res.length > 0) {
+      return {
+        success: true,
+        row: res[0]
+      };
+    } else {
+      return {
+        success: false
+      };
+    }
+  } catch (error) {
+    console.log("Error at Passage.check", error.message);
     return false;
   }
 };

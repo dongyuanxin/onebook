@@ -10,8 +10,8 @@ module.exports = {
     assetsSubDirectory: "static",
     assetsPublicPath: "/",
     proxyTable: {
-      '/api/**': {
-        target: 'http://localhost:80'
+      "/api/**": {
+        target: "http://localhost:80"
       }
     },
 
@@ -45,7 +45,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, "../dist"),
     assetsSubDirectory: "static",
-    assetsPublicPath: "/",
+    assetsPublicPath: "https://onebook-1255463368.file.myqcloud.com/",
 
     /**
      * Source Maps

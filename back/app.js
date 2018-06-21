@@ -2,21 +2,7 @@
 const { port } = require("./config");
 const path = require("path");
 const Koa = require("koa");
-const cors = require("koa2-cors");
 const app = new Koa();
-
-app.use(
-  cors({
-    origin: "*",
-    exposeHeaders: ["WWW-Authenticate", "Server-Authorization"],
-    maxAge: 5,
-    credentials: true,
-    allowMethods: ["GET", "POST"],
-    allowHeaders: ["Content-Type", "Authorization", "Accept"]
-  })
-);
-
-app.keys = ["A platform coded with Koa2", "I'm just a coder"]; // cookies加密密钥
 
 // 解析body
 const bodyParser = require("koa-bodyparser");

@@ -45,11 +45,29 @@ export default {
       return str === undefined || str === "";
     },
     fetchContent() {
+      let arr = this.$route.query.psgId.split(".");
       let path = this.rootUrl + this.$route.query.psgId.replace(/\*/g, "/");
       axios.get(path).then(res => {
-        this.content = res.data;
+        let lang = arr[arr.length - 1];
+        this.content =
+          lang === "md" ? res.data : this.codeToContent(res.data, lang);
         hub.$emit("resolve", this.content);
       });
+    },
+    codeToContent(code, lang) {
+      let map = {
+        js: "javascript",
+        py: "python",
+        java: "java",
+        c: "cpp",
+        cpp: "cpp",
+        php: "php",
+        html: "html",
+        css: "css",
+        scss: "scss",
+        sh: "shell"
+      };
+      return "```" + map[lang] + "\n" + code + "\n```";
     }
   }
 };
