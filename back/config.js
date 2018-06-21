@@ -17,6 +17,10 @@ const mysql = {
 const _global = {
   user: {},
   views: {
+    index: fs.readFileSync(
+      path.join(__dirname, "server", "public", "index.html"),
+      "utf-8"
+    ),
     "404": fs.readFileSync(
       path.join(__dirname, "server", "views", "404.html"),
       "utf-8"
