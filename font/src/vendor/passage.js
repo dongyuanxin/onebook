@@ -13,6 +13,8 @@ Passage.prototype.getRootUrl = loc => {
       depository +
       "/master/"
     );
+  } else if (platform === "coding") {
+    return `https://coding.net/u/${user}/p/${depository}/git/raw/master/`;
   }
 };
 
