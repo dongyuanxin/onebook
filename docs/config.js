@@ -37,7 +37,7 @@ myNav = {
 docute.isDev = false;
 
 docute.init({
-    url: docute.isDev? '.' : 'http://193.112.241.232:8000',
+    url: docute.isDev? '.' : 'http://193.112.241.232:8080',
     routeMode: 'history', // or be 'hash'
     landing: {
         source: 'landing.html',
